@@ -9,6 +9,7 @@ import RestorePage from "./components/RestorePage.tsx";
 import RestoreAuthPage from "./components/RestoreAuthPage.tsx";
 import Publications from "./components/Publications/Publications.tsx";
 import PublicationDetail from "./components/Publications/PublicationDetail.tsx";
+import Favorites from "./components/Favorites/Favorites.tsx";
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
         <Route path="/restoreauth" element={<RestoreAuthPage />} />
         <Route path="/publications" element={<Publications />} />
         <Route path="/publications/:id" element={<PublicationDetail />} />
+        <Route path="/user/favorites" element={<Favorites />} />
       </Routes>
     </Router>
   );

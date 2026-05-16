@@ -66,32 +66,39 @@ function SignUpAuth() {
     };
 
     const handleVerify = async () => {
-        const fullCode = code.join('');
-        if (fullCode.length < 6) {
-            setErrorCode('Введите все 6 цифр кода');
-            return;
+    const fullCode = code.join('');
+    if (fullCode.length < 6) {
+        setErrorCode('Введите все 6 цифр кода');
+        return;
+    }
+
+    setIsLoading(true);
+    try {
+        // Сначала проверяем код
+        const email = store.pendingRegistration?.email;
+        if (email) {
+            await store.verifyRestoreCode(email, fullCode);
         }
 
-        setIsLoading(true);
-        try {
-            if (store.pendingRegistration) {
-                await store.registration({
-                    ...store.pendingRegistration,
-                    code: fullCode
-                });
-                store.pendingRegistration = null;
-            }
-
-            navigate('/signin?success=true');
-        } catch (e: unknown) {
-            const msg = e instanceof Error ? e.message : 'Неверный или устаревший код';
-            setErrorCode(msg);
-            setCode(['', '', '', '', '', '']);           // добавьте это
-            document.getElementById('code-0')?.focus();
-        } finally {
-            setIsLoading(false);
+        // Только если код верный — регистрируем
+        if (store.pendingRegistration) {
+            await store.registration({
+                ...store.pendingRegistration,
+                code: fullCode
+            });
+            store.pendingRegistration = null;
         }
-    };
+
+        navigate('/signin?success=true');
+    } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : 'Неверный или устаревший код';
+        setErrorCode(msg);
+        setCode(['', '', '', '', '', '']);
+        document.getElementById('code-0')?.focus();
+    } finally {
+        setIsLoading(false);
+    }
+};
 
     return (
         <div className="sign-in">

@@ -1,3 +1,4 @@
+// components/Sidebar/Sidebar.tsx
 import { NavLink } from "react-router-dom";
 import layoutClasses from "../styles/layout.module.css";
 import sidebarClasses from "../styles/sidebar.module.css";
@@ -45,7 +46,14 @@ function Sidebar() {
           <div className={sidebarClasses.nav__section}>
             <p className={sidebarClasses.section__label}>МОИ АЛЬБОМЫ</p>
             <ul className={sidebarClasses.ul__menu2}>
-              <a href=""><IconHeart /> Избранное</a>
+              <NavLink
+                to="/user/favorites"
+                className={({ isActive }) =>
+                  isActive ? sidebarClasses.activeLink : undefined
+                }
+              >
+                <IconHeart /> Избранное
+              </NavLink>
               <a href="">Мои записи</a>
               <a href="">Название</a>
               <a href="">Короткое название</a>
