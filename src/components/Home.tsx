@@ -1,5 +1,6 @@
 import Hero from "./homeSections/Hero.tsx";
 import Header from "./header/Header.tsx";
+import child2 from '../assets/img/child2.png';
 import tube from '../assets/img/tube.png';
 import notesFromTube from '../assets/img/notesFromTube.png';
 import './notes-from-tube.css'
@@ -27,7 +28,7 @@ function Home() {
                 <Hero />
                 <About isFirst={true}/>
                 <About
-                    imgSource={'./src/assets/img/child2.png'}
+                    imgSource={child2}
                     textP1={'С помощью наших фонограмм музыканты могут играть в домашних условиях в сопровождении'}
                     text600={'качественного цифрового аккомпанемента.'}
                     textP2={'Использование нашей разработки вовлекает исполнителей в активную форму музицирования, поэтому мы рекомендуем играть дома используя наше сопровождение на протяжении всего времени обучения, но на концертах исполнять произведения под аккомпанемент концертмейстера.'}
