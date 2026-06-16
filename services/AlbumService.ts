@@ -1,6 +1,4 @@
 // services/AlbumService.ts
-// Соответствует AlbumController.java — /api/v1/albums
-
 import { AxiosResponse } from "axios";
 import $api from "../http";
 import { IAlbum } from "../models/response/IAlbum";

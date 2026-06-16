@@ -6,9 +6,8 @@ export interface IUser {
     displayName?: string;
     displaySurname?: string;
     photoUrl?: string;
-    role?: string; // "ROLE_PERSONAL" | "ROLE_COMPANY" | "ROLE_ANONYMOUS"
+    role?: string;
     createdAt?: string;
-    // корпоративные — когда напарник добавит в ProfileResponse
     companyName?: string;
     profession?: string;
     inn?: number;

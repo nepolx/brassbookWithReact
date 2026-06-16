@@ -1,5 +1,4 @@
 // stores/AlbumStore.ts
-// MobX-стор для альбомов и записей — по паттерну store.ts
 
 import { makeAutoObservable, runInAction } from "mobx";
 import AlbumService, { AlbumSortBy } from "../services/AlbumService";
@@ -9,30 +8,30 @@ import { IRecord } from "../models/response/IRecord";
 import { getErrorMessage } from "../utils/errorUtils";
 
 export default class AlbumStore {
-    // ── Альбомы ──────────────────────────────────────────────────────────
+    //Альбомы
     albums: IAlbum[] = [];
     albumsPage = 0;
     albumsTotalPages = 0;
     albumsSortBy: AlbumSortBy = "createdAt";
 
-    // ── Записи в альбоме ─────────────────────────────────────────────────
+    //Записи в альбоме
     currentAlbumId: number | null = null;
     records: IRecord[] = [];
     recordsPage = 0;
     recordsTotalPages = 0;
     recordsSortBy: RecordSortBy = "createdAt";
 
-    // ── Мои записи ───────────────────────────────────────────────────────
+    //Мои записи
     myRecords: IRecord[] = [];
     myRecordsPage = 0;
     myRecordsTotalPages = 0;
 
-    // ── Избранное ────────────────────────────────────────────────────────
+    //Избранное
     favorites: IRecord[] = [];
     favoritesPage = 0;
     favoritesTotalPages = 0;
 
-    // ── Состояние ────────────────────────────────────────────────────────
+    //Состояние
     isLoading = false;
     error: string | null = null;
 
@@ -40,7 +39,7 @@ export default class AlbumStore {
         makeAutoObservable(this);
     }
 
-    // ── АЛЬБОМЫ ──────────────────────────────────────────────────────────
+    // АЛЬБОМЫ
 
     async loadAlbums(page = 0, sortBy: AlbumSortBy = this.albumsSortBy) {
         this.isLoading = true;
@@ -112,8 +111,7 @@ export default class AlbumStore {
         }
     }
 
-    // ── ЗАПИСИ В АЛЬБОМЕ ─────────────────────────────────────────────────
-
+    // ЗАПИСИ В АЛЬБОМЕ
     async loadRecordsInAlbum(
         albumId: number,
         page = 0,
@@ -144,7 +142,6 @@ export default class AlbumStore {
         this.error = null;
         try {
             await AlbumService.addRecordToAlbum(albumId, recordId);
-            // Обновляем количество записей в альбоме
             runInAction(() => {
                 const album = this.albums.find(a => a.id === albumId);
                 if (album) album.recordCount += 1;
@@ -160,11 +157,9 @@ export default class AlbumStore {
         try {
             await AlbumService.moveRecord(recordId, fromAlbumId, toAlbumId);
             runInAction(() => {
-                // Убираем запись из текущего списка если смотрим fromAlbum
                 if (this.currentAlbumId === fromAlbumId) {
                     this.records = this.records.filter(r => r.id !== recordId);
                 }
-                // Обновляем счётчики
                 const from = this.albums.find(a => a.id === fromAlbumId);
                 const to   = this.albums.find(a => a.id === toAlbumId);
                 if (from) from.recordCount = Math.max(0, from.recordCount - 1);
@@ -176,8 +171,7 @@ export default class AlbumStore {
         }
     }
 
-    // ── МОИ ЗАПИСИ ───────────────────────────────────────────────────────
-
+    // МОИ ЗАПИСИ
     async loadMyRecords(page = 0, sortBy: RecordSortBy = "createdAt") {
         this.isLoading = true;
         this.error = null;
@@ -212,7 +206,7 @@ export default class AlbumStore {
         }
     }
 
-    // ── ИЗБРАННОЕ ────────────────────────────────────────────────────────
+    // ИЗБРАННОЕ
 
     async loadFavorites(page = 0, sortBy: RecordSortBy = "createdAt") {
         this.isLoading = true;
@@ -243,7 +237,6 @@ export default class AlbumStore {
                 await RecordService.addToFavorites(record.id);
             }
             runInAction(() => {
-                // Обновляем флаг во всех списках где может встречаться запись
                 const toggle = (list: IRecord[]) => {
                     const r = list.find(r => r.id === record.id);
                     if (r) r.isFavorite = !r.isFavorite;
@@ -251,7 +244,6 @@ export default class AlbumStore {
                 toggle(this.records);
                 toggle(this.myRecords);
                 toggle(this.favorites);
-                // Убираем из избранного если убрали лайк
                 if (record.isFavorite) {
                     this.favorites = this.favorites.filter(r => r.id !== record.id);
                 }
@@ -262,14 +254,13 @@ export default class AlbumStore {
         }
     }
 
-    // ── ОЦЕНКА ───────────────────────────────────────────────────────────
+    // ОЦЕНКА
 
     async rateRecord(recordId: number, rating: number): Promise<void> {
         this.error = null;
         try {
             const response = await RecordService.rateRecord(recordId, rating);
             runInAction(() => {
-                // Обновляем averageRating во всех списках
                 const update = (list: IRecord[]) => {
                     const r = list.find(r => r.id === recordId);
                     if (r) r.averageRating = response.data.averageRating;

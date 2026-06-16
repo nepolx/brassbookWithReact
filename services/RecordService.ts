@@ -1,5 +1,4 @@
 // services/RecordService.ts
-// Соответствует RecordController.java — /api/v1/records
 
 import { AxiosResponse } from "axios";
 import $api from "../http";
@@ -58,7 +57,7 @@ export default class RecordService {
     // GET /api/v1/records/{recordId}/download  → редирект на fileUrl
     static getDownloadUrl(recordId: number): Promise<AxiosResponse<void>> {
         return $api.get<void>(`/records/${recordId}/download`, {
-            maxRedirects: 0,    // не следуем редиректу — берём Location header
+            maxRedirects: 0,
             validateStatus: (s) => s === 302 || s === 200,
         });
     }
